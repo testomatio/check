@@ -1,3 +1,5 @@
+<!-- playground -->
+
 # 🌀 AutoCheck Tests by Testomatio
 
 > GitHub Action with Static Analysis for your JavaScript tests.
