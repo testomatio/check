@@ -85,14 +85,12 @@ module.exports = (ast, file = '', source = '', opts = {}) => {
         if (['describe', 'it', 'context', 'test'].includes(name)) {
           const line = getLineNumber(path);
           throw new CommentError(
-            /* prettier-ignore */
-            'Exclusive tests detected. `.only` call found in '
-            + `${file}:${line}\n`
-            + 'Remove `.only` to restore test checks',
+            'Exclusive tests detected. `.only` call found in ' +
+              `${file}:${line}\n` +
+              'Remove `.only` to restore test checks',
           );
         }
       }
-
       if (path.isIdentifier({ name: 'skip' })) {
         if (!path.parent || !path.parent.object) {
           return;
@@ -101,24 +99,24 @@ module.exports = (ast, file = '', source = '', opts = {}) => {
           path.parent.object.name || path.parent.object.property.name || path.parent.object.callee.object.name;
 
         if (name === 'test' || name === 'it') {
-          // test or it
           if (!hasStringOrTemplateArgument(path.parentPath.container)) return;
 
           const testName = getStringValue(path.parentPath.container);
+
           tests.push({
             name: testName,
             suites: currentSuite
               .filter(s => getEndLineNumber({ container: s }) >= getLineNumber(path))
               .map(s => getStringValue(s)),
+            updatePoint: getUpdatePoint(path.parentPath.container),
             line: getLineNumber(path),
             code: getCode(source, getLineNumber(path), getEndLineNumber(path), isLineNumber),
             file,
-            skipped: true,
+            skipped: false,
           });
         }
 
         if (name === 'describe') {
-          // suite
           if (!hasStringOrTemplateArgument(path.parentPath.container)) return;
           const suite = path.parentPath.container;
           suite.skipped = true;
@@ -136,24 +134,24 @@ module.exports = (ast, file = '', source = '', opts = {}) => {
           path.parent.object.name || path.parent.object.property.name || path.parent.object.callee.object.name;
 
         if (name === 'test' || name === 'it') {
-          // test or it
           if (!hasStringOrTemplateArgument(path.parentPath.container)) return;
 
           const testName = getStringValue(path.parentPath.container);
+
           tests.push({
             name: testName,
             suites: currentSuite
               .filter(s => getEndLineNumber({ container: s }) >= getLineNumber(path))
               .map(s => getStringValue(s)),
+            updatePoint: getUpdatePoint(path.parentPath.container),
             line: getLineNumber(path),
             code: getCode(source, getLineNumber(path), getEndLineNumber(path), isLineNumber),
             file,
-            skipped: true,
+            skipped: false,
           });
         }
 
         if (name === 'describe') {
-          // suite
           if (!hasStringOrTemplateArgument(path.parentPath.container)) return;
           const suite = path.parentPath.container;
           suite.skipped = true;
@@ -178,10 +176,12 @@ module.exports = (ast, file = '', source = '', opts = {}) => {
             suites: currentSuite
               .filter(s => getEndLineNumber({ container: s }) >= getLineNumber(path))
               .map(s => getStringValue(s)),
+            updatePoint: getUpdatePoint(path.parentPath.container),
             line: getLineNumber(path),
             code: getCode(source, getLineNumber(path), getEndLineNumber(path), isLineNumber),
             file,
-            skipped: true,
+            tags: ['@todo'],
+            skipped: false,
           });
         }
       }
@@ -194,13 +194,12 @@ module.exports = (ast, file = '', source = '', opts = {}) => {
         beforeCode = beforeCode ?? '';
         beforeEachCode = beforeEachCode ?? '';
         afterCode = afterCode ?? '';
-        /* prettier-ignore */
         code = noHooks
           ? getCode(source, getLineNumber(path), getEndLineNumber(path), isLineNumber)
-          : beforeEachCode
-          + beforeCode
-          + getCode(source, getLineNumber(path), getEndLineNumber(path), isLineNumber)
-          + afterCode;
+          : beforeEachCode +
+            beforeCode +
+            getCode(source, getLineNumber(path), getEndLineNumber(path), isLineNumber) +
+            afterCode;
 
         const testName = getStringValue(path.parent);
 

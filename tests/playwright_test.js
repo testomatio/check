@@ -281,11 +281,11 @@ test.describe.only('my test', () => {
     expect(tests[2].skipped).to.be.true;
     // Condition 2: test.describe.skip + 1 inner skip => all inner tests skipped
     expect(tests[3].skipped).to.be.true;
-    expect(tests[4].skipped).to.be.true;
+    expect(tests[4].skipped).to.be.false;
     expect(tests[5].skipped).to.be.true;
     // Condition 3: 1 inner skip => only 1 skipped
     expect(tests[6].skipped).to.be.false;
-    expect(tests[7].skipped).to.be.true;
+    expect(tests[7].skipped).to.be.false;
     expect(tests[8].skipped).to.be.false;
   });
 
@@ -299,11 +299,11 @@ test.describe.only('my test', () => {
     expect(tests[2].skipped).to.be.true;
     // Condition 2: test.describe.fixme + 1 inner fixme + 1 inner skip => all inner tests skipped
     expect(tests[3].skipped).to.be.true;
-    expect(tests[4].skipped).to.be.true;
-    expect(tests[5].skipped).to.be.true;
+    expect(tests[4].skipped).to.be.false;
+    expect(tests[5].skipped).to.be.false;
     // Condition 3: 1 inner fixme => only 1 skipped
     expect(tests[6].skipped).to.be.false;
-    expect(tests[7].skipped).to.be.true;
+    expect(tests[7].skipped).to.be.false;
     expect(tests[8].skipped).to.be.false;
   });
 

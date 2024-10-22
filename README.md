@@ -570,7 +570,13 @@ TESTOMATIO=1111111 npx check-tests CodeceptJS "**/*{.,_}{test,spec}.js" --no-emp
 
 ## Import Into a Specific Suite
 
-To put all imported tests into a specific suite (folder) pass in `TESTOMATIO_PREPEND_DIR` environment variable:
+To put all imported tests into a specific suite (folder) pass in `TESTOMATIO_PREPEND_DIR` environment variable, avoid using special characters in the directory name. This helps prevent potential errors across different operating systems and command-line environments.
+
+**Recommendations:**
+
+Use only letters `(A-Z, a-z)`, numbers `(0-9)`, hyphens `(-)`, and underscores `(_)`.
+Avoid characters like `/, \, :, *, ?, ", <, >, |, &, $, #, %, @,` and the apostrophe `(')`.
+Examples of recommended naming: `MyTests` or `project_tests`.
 
 ```
 TESTOMATIO_PREPEND_DIR="MyTESTS" TESTOMATIO=1111111 npx check-tests CodeceptJS "**/*{.,_}{test,spec}.js"
