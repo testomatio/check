@@ -1,0 +1,32 @@
+{
+  "tests": [
+    "@first Create Todos @step:06 @smoke @story:12345: Create a new todo item",
+    "@first Create Todos @step:06 @smoke @story:12345: Create multiple todo items",
+    "@first Create Todos @step:06 @smoke @story:12345: Text input field should be cleared after each item",
+    "@first Create Todos @step:06 @smoke @story:12345: Text input should be trimmed",
+    "@first Create Todos @step:06 @smoke @story:12345: New todos should be added to the bottom of the list",
+    "@first Create Todos @step:06 @smoke @story:12345: Footer should be visible when adding TODOs",
+    "Edit/Delete Todos @step-06: Edited todo is saved on blur",
+    "Edit/Delete Todos @step-06: Delete todos",
+    "Mark as completed/not completed @step-06: Mark todos as completed",
+    "Mark as completed/not completed @step-06: Unmark completed todos",
+    "Mark as completed/not completed @step-06: Mark all todos as completed",
+    "Mark as completed/not completed @step-06: Clear completed todos",
+    "Persist Todos: Todos survive a page refresh @step-06",
+    "codepress demo: Create some todo items @smoke"
+  ],
+  "suites": [
+    "@first Create Todos @step:06 @smoke @story:12345",
+    "Edit/Delete Todos @step-06",
+    "Mark as completed/not completed @step-06",
+    "Persist Todos",
+    "codepress demo"
+  ],
+  "files": [
+    "/home/davert/demos/todo-examples/todomvc-tests/create-todos_test.js",
+    "/home/davert/demos/todo-examples/todomvc-tests/edit-todos_test.js",
+    "/home/davert/demos/todo-examples/todomvc-tests/mark-as-completed_test.js",
+    "/home/davert/demos/todo-examples/todomvc-tests/persist-todos_test.js",
+    "/home/davert/demos/todo-examples/todomvc-tests/todo-mvc_test.js"
+  ]
+}

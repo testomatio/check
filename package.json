@@ -1,0 +1,76 @@
+{
+  "name": "check-tests",
+  "version": "0.10.0-beta-alias",
+  "description": "Static analysis for tests. Prints all tests in console and fails when exclusive or skipped tests found.",
+  "keywords": [
+    "testing",
+    "babel",
+    "typescript",
+    "static analysis",
+    "cypress.io",
+    "codeceptjs",
+    "protractor",
+    "mocha",
+    "jest"
+  ],
+  "homepage": "https://testomat.io",
+  "license": "MIT",
+  "repository": "https://github.com/testomatio/check-tests",
+  "author": {
+    "name": "DavertMik",
+    "email": "davert@codegyre.com",
+    "url": "https://testomat.io"
+  },
+  "files": [
+    "src",
+    "bin",
+    "index.js"
+  ],
+  "bin": {
+    "check-tests": "./bin/check.js"
+  },
+  "main": "src/index.js",
+  "dependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/parser": "^7.15.7",
+    "@babel/traverse": "^7.23.2",
+    "@typescript-eslint/typescript-estree": "^5.3.1",
+    "babel-eslint": "^10.1.0",
+    "chalk": "^4.1.2",
+    "commander": "^8.2.0",
+    "debug": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "glob": "^7.2.0",
+    "insert-line": "^1.1.0",
+    "object-hash": "^2.2.0",
+    "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.0",
+    "@actions/github": "^5.0.0",
+    "@actions/io": "^1.1.1",
+    "@actions/tool-cache": "^1.7.1",
+    "@testomatio/reporter": "^1.5.1",
+    "@zeit/ncc": "^0.22.3",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.25.3",
+    "husky": "^7.0.2",
+    "mocha": "^9.1.2",
+    "prettier": "^2.4.1",
+    "pretty-quick": "^3.1.3"
+  },
+  "scripts": {
+    "check": "node -r dotenv/config bin/check.js",
+    "run": "node -r dotenv/config index.js",
+    "test": "mocha tests/**_test.js",
+    "lint": "eslint 'src/**/*.js' --fix",
+    "pretty-quick": "pretty-quick --staged",
+    "prepare": "husky install",
+    "build": "ncc build index.js --minify"
+  }
+}

@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Import API
+paths:
+  /api/load:
+    post:
+      summary: Load tests
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          description: Testomat.io API key of a project, obtained from Settings/Project
+          schema:
+            type: string
+      requestBody:
+        description: Import tests payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportTests'
+      responses:
+        '200':
+          description: Tests successfully loaded
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/test_data:
+    get:
+      summary: Get test data
+      description: >
+        Returns the map of previously imported suites and tests to update IDs in the codebase.
+      parameters:
+        - in: query
+          name: api_key
+          description: Testomat.io API key of a project, obtained from Settings/Project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tests:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: >
+                      A map of test names and their corresponding IDs.
+                      Each test contains extra lines to get a better guess of matching test.
+                      At first we try to match the test inside the same suite as we previously imported
+                      If not found, search for a test with the same name.                
+
+                      Example Response:
+
+                      ```
+                        "file_name#suite_title#test_title: T12345678",
+                        "suite_title#test_title: T12345678",
+                        "test_title: T12345678",
+                      ```
+
+                      So at first, check for a file `file_name` with suite `suite_title`, and test `test_title`.
+                      If the test is not found, try the second line where we ignore the file name and look only by suite title and test title. 
+                      If not found - search by test title only, ignoring information about suite.
+
+                  suites:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: A map of suite names to their corresponding IDs.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    Test:
+      type: object
+      properties:
+        name:
+          description: Title of a test
+          type: string
+        suites:
+          description: >
+            List of suites this test belongs to.
+            Usually this array should contain one element with a suite title
+            Add more titles if nested suites is used (describe inside describe)
+          type: array
+          items:
+            type: string
+        code:
+          description: Source code of the test (including its before/setup blocks)
+          type: string
+        skipped:
+          description: if this test is skipped in the codebase
+          type: boolean
+        file:
+          description: a file name where this test is located. Path is relative to current directory.
+          type: string
+        labels:
+          description: Assign labels to tests (labels must be created before)
+          type: array
+          items:
+            type: string
+      required:
+        - name
+        - suites
+        - file
+    ImportTests:
+      type: object
+      properties:
+        framework:
+          type: string
+          description: Name of a testing framework used (`jest`, `cucumber`, `codeceptjs`, etc).
+        language:
+          type: string
+          description: Name of a programming language used (`javascript`, `php`, etc)
+        noempty:
+          description: Remove empty suites after import
+          type: boolean
+        'no-detach':
+          description: Do not mark previously imported tests but missing on this import as `detached`
+          type: boolean
+        structure:
+          type: boolean
+          description: If tests were organized in Testomat.io, re-organize them to match tests in the source code.
+        sync:
+          type: boolean
+          description: Wait for all the tests to be uploaded and added
+        tests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Test'
+      required:
+        - tests
